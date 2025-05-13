@@ -1,0 +1,28 @@
+Vagrant.configure("2") do |config|
+  config.vm.define "iel-machS" do |server|
+    server.vm.box = "generic/alpine318"
+    server.vm.hostname = "iel-machS"
+    server.vm.network "private_network", ip: "192.168.56.110"
+    server.vm.synced_folder "./confs", "/vagrant", type: "virtualbox"
+    server.vm.provider "virtualbox" do |vb|
+      vb.name = "iel-machS"
+      vb.cpus = "1"
+      vb.memory = "1024"
+      vb.customize ["modifyvm", :id, "--name", "iel-machS"]
+    end
+    server.vm.provision "shell", path: "./scripts/server_script.sh"
+  end
+  config.vm.define "iel-machSW" do |agent|
+    agent.vm.box = "generic/alpine318"
+    agent.vm.hostname = "iel-machSW"
+    agent.vm.network "private_network", ip: "192.168.56.111"
+    agent.vm.synced_folder "./confs", "/vagrant", type: "virtualbox"
+    agent.vm.provider "virtualbox" do |vb|
+      vb.name = "iel-machSW"
+      vb.cpus = "1"
+      vb.memory = "1024"
+      vb.customize ["modifyvm", :id, "--name", "iel-machSW"]
+    end
+    agent.vm.provision "shell", path: "./scripts/agent_script.sh"
+  end
+end
